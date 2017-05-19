@@ -1,23 +1,177 @@
-Proposal for working on the MFT code in O2
+<h1> Proposal for a work-flow on the MFT code in O2 </h1>
 
-The aim is to establish common practices useful to the MFT developers who will 
-write code going to the main project AliceO2Group. These guiding lines should 
-provide information to each developer about how to:
+<p> <b>Reminder</b>: the O2 main project code is hosted on GitHub as a 
+repository of the <b>AliceO2Group</b> here: 
+<br>
+<pre>https://github.com/AliceO2Group/AliceO2/</pre>
+</p>
 
-[1] have at any time the latest code of the AliceO2Group, build it on a local 
-copy and use it
+<p> and each developer starts by creating a <b>fork</b> of the "dev" branch of the 
+main project on his own GitHub account, which will be accessible here:
+<br>
+<pre>https://github.com/&lt;github-user-name&gt;/AliceO2/</pre>
 
-[2] manage his own GitHub fork on a local copy, commit his local changes and 
-request to pull them to the main project AliceO2Group
+<p> In the following we will assume three developers working on the MFT code. 
+Their repositories will be:</p>
 
-[3] have an up-to-date local copy of each GitHub fork of the other developers,
-build it and use it
+<ul>
+<li> https://github.com/mftdevA/AliceO2/</li><br>
+<li> https://github.com/mftdevB/AliceO2/</li><br>
+<li> https://github.com/mftdevC/AliceO2/</li><br>
+</ul>
 
-[4] be able to include, for testing purposes, commits done on their forks by 
-the other detectors, but which are not yet pulled to the main project 
-AliceO2Group
+<p>Note: of course, each developer may choose in his repository to work on a new 
+branch, named, for instance, "mft", instead of using the "dev" branch. This new 
+branch will be created on GitHub starting from the existing "dev" branch. 
+Therefore, cloning into his local copy will be one of these (for the developer 
+A):</p>
 
-[5] perform the operation from point [4] on a separate (and temporary) branch of 
-their local copy of their own fork
+<p><pre>git clone -b dev https://github.com/mftdevA/AliceO2 .</pre></p>
+or
+<p><pre>git clone -b mft https://github.com/mftdevA/AliceO2 .</pre></p>
+
+<p> <b>The aim of this document</b> is to establish common practices useful
+for the MFT developers who will write code going to the main project
+AliceO2Group. These guiding lines should provide information to each
+developer about how to: </p>
+
+<ul>
+
+<li> [1] have at any time the latest code of the AliceO2Group, build it on a 
+local copy and use it </li>
+<br>
+<li> [2] manage his own GitHub fork on a local copy, commit his local changes 
+and request to pull them to the main project AliceO2Group </li>
+<br>
+<li> [3] have an up-to-date local copy of each GitHub fork of the other 
+developers, build it and use it </li>
+<br>
+<li> [4] be able to include, for testing purposes, commits done on their forks 
+by the other detectors, but which are not yet pulled to the main project 
+AliceO2Group </li>
+<br>
+<li> [5] perform the operation from point [4] on a separate (and temporary) branch of their local copy of their own fork </li>
+
+</ul>
+
+<p> In the following, we will assume that the local copies of the project will 
+be created in the directory <b>/alice/sw/</b>.</p>
+
+<h2> Managing the main project "dev" branch</h2>
+
+<p>After the initial fork of the "dev" branch of the AliceO2Group/AliceO2 
+account on your own GitHub account, this branch will have the last commit at 
+that very moment and will not evolve anymore, unless you synchronize it.</p>
+
+<p>Two cases can be distinguished here:</p>
+
+<ol>
+<li>the developer works on the "dev" branch of this fork</li>
+<br>
+<li>the developer works, for any reasons, on a new branch, say "mft"</li>
+</ol>
+
+<h3>1. This is the case when we want to have the code from the main project 
+at any moment, even without our latest commits being pulled by AliceO2Group/dev. 
+</h3>
+
+<ul>
+<li>clone a local copy<br>
+<pre>cd /alice/sw/</pre>
+<pre>git clone -b dev https://github.com/AliceO2Group/AliceO2 O2-dev</pre>
+<li>update as often you find necessary</li>
+<pre>cd /alice/sw/O2-dev</pre>
+<pre>git pull</pre>
+<li><b>never modify code in this directory!</b></pre>
+</ul>
+
+<h3> 2. This is the case when we want to keep the "dev" branch on our GitHub 
+fork but will not directly work on it (the example user is "mftdevA")</h3>
+
+<ul>
+<li>clone a local copy<br>
+<pre>cd /alice/sw/</pre>
+<pre>git clone -b dev https://github.com/mftdevA/AliceO2 O2-dev</pre>
+<li> add the main project remote source </li>
+<pre>cd O2-dev</pre>
+<pre>git remote add aliceo2group --track dev https://github.com/AliceO2Group/AliceO2</pre>
+<li>update, any time you think it is necessary</li>
+<pre>git fetch aliceo2group</pre>
+<pre>git rebase aliceo2group dev</pre>
+<pre>git push</pre>
+<li><b>never modify code in this directory!</b></pre>
+</ul>
+
+<h2> Managing your repository's "dev" branch when it is your working branch</h2>
+
+<ul>
+<li>clone a local copy<br>
+<pre>cd /alice/sw/</pre>
+<pre>git clone -b dev https://github.com/mftdevA/AliceO2 O2-my-dev</pre>
+<li> add the main project remote source </li>
+<pre>cd O2-my-dev</pre>
+<pre>git remote add aliceo2group --track dev https://github.com/AliceO2Group/AliceO2</pre>
+<li>update before doing a push of your modifications to your repository</li>
+<pre>git fetch aliceo2group</pre>
+<pre>git rebase aliceo2group dev</pre>
+<pre>git push -f</pre>
+<li>create the pull requests from <b>mftdevA/dev</b> to <b>AliceO2Group/dev</b>
+</ul>
+
+<p><b>Important!</b> Notice the "-f" flag: this will allow to modify the commit 
+history, since you have worked your latest commits on top of an older "dev" 
+branch of the main project.</p>
+
+<h2> Managing your repository's "mft" branch when this is your working 
+branch</h2>
+
+<ul>
+<li>clone a local copy<br>
+<pre>cd /alice/sw/</pre>
+<pre>git clone -b mft https://github.com/mftdevA/AliceO2 O2-mft</pre>
+<li> add the main project remote source </li>
+<pre>cd O2-mft</pre>
+<pre>git remote add aliceo2group --track dev https://github.com/AliceO2Group/AliceO2</pre>
+<li>update before doing a push of your modifications to your repository</li>
+<pre>git fetch aliceo2group</pre>
+<pre>git rebase aliceo2group dev</pre>
+<pre>git push -f</pre>
+<li>create the pull requests from <b>mftdevA/mft</b> to <b>AliceO2Group/dev</b>
+</ul>
+
+<h2> Managing working branches from repositories of other developers</h2>
+
+<p>Suppose "mftdevA" and "mftdevB" work on the "dev" branch of their repository, 
+while "mftdevC" works on his own "mft" branch and that "mftdevB" would like to 
+track the work of the other two developers.</p> 
+
+<ul>
+<li>mftdevA = "dev" branch</li><br>
+<li>mftdevB = "dev" branch</li><br>
+<li>mftdevC = "mft" branch</li><br>
+</ul>
+
+<ul>
+<li>clone local copies<br>
+<pre>cd /alice/sw/</pre>
+<pre>git clone -b dev https://github.com/mftdevA/AliceO2 O2-mftdevA</pre>
+<pre>git clone -b mft https://github.com/mftdevC/AliceO2 O2-mftdevC</pre>
+<li>since there is no mechanism (yet) for re-writing environment variables, 
+the building and the execution must be done in different shells</li>
+<pre>cd /alice/sw/O2-mftdevA/build_o2</pre>
+<pre>cmake ........</pre> 
+<pre>make ........</pre>
+<pre>source config.sh</pre>
+<pre>etc.</pre>
+</ul>
+
+<p>Note: there are other ways of working with different branches, without 
+changing the local directory, but due to the fact that the user wants to build 
+and check each version of the code and that this is done in the common 
+"build_o2" directory, I have chosen another, simpler way.</p>
+
+
+
+
 
 
