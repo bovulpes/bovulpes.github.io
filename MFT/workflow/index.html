@@ -37,20 +37,21 @@ developer about how to: </p>
 
 <ul>
 
-<li> [1] have at any time the latest code of the AliceO2Group, build it on a 
+<li> have at any time the latest code of the AliceO2Group, build it on a 
 local copy and use it </li>
 <br>
-<li> [2] manage his own GitHub fork on a local copy, commit his local changes 
+<li> manage his own GitHub fork on a local copy, commit his local changes 
 and request to pull them to the main project AliceO2Group </li>
 <br>
-<li> [3] have an up-to-date local copy of each GitHub fork of the other 
+<li> have an up-to-date local copy of each GitHub fork of the other 
 developers, build it and use it </li>
 <br>
-<li> [4] be able to include, for testing purposes, commits done on their forks 
+<li> be able to include, for testing purposes, commits done on their forks 
 by the other detectors, but which are not yet pulled to the main project 
 AliceO2Group </li>
 <br>
-<li> [5] perform the operation from point [4] on a separate (and temporary) branch of their local copy of their own fork </li>
+<li> perform the operation from previous point on a separate (and temporary) 
+branch of their local copy of their own fork </li>
 
 </ul>
 
@@ -102,7 +103,7 @@ fork but will not directly work on it (the example user is "mftdevA")</h3>
 <li><b>never modify code in this directory!</b></pre>
 </ul>
 
-<h2> Managing your repository's "dev" branch when it is your working branch</h2>
+<h2> Managing your repository's "dev" branch when it is your work branch</h2>
 
 <ul>
 <li>clone a local copy<br>
@@ -122,7 +123,7 @@ fork but will not directly work on it (the example user is "mftdevA")</h3>
 history, since you have worked your latest commits on top of an older "dev" 
 branch of the main project.</p>
 
-<h2> Managing your repository's "mft" branch when this is your working 
+<h2> Managing your repository's "mft" branch when this is your work 
 branch</h2>
 
 <ul>
@@ -139,7 +140,7 @@ branch</h2>
 <li>create the pull requests from <b>mftdevA/mft</b> to <b>AliceO2Group/dev</b>
 </ul>
 
-<h2> Managing working branches from repositories of other developers</h2>
+<h2> Managing work branches from repositories of other developers</h2>
 
 <p>Suppose "mftdevA" and "mftdevB" work on the "dev" branch of their repository, 
 while "mftdevC" works on his own "mft" branch and that "mftdevB" would like to 
@@ -170,7 +171,34 @@ changing the local directory, but due to the fact that the user wants to build
 and check each version of the code and that this is done in the common 
 "build_o2" directory, I have chosen another, simpler way.</p>
 
+<h3>Including selected commits from another developer for testing purpose</h3>
 
+<p>This is the case when we want to change a small number of files modified by 
+another developer in his repository and not yet pulled by the main project.</p>
+
+<p>The first idea is to proceed as above, cloning the code in different 
+local directories and then selectively copying files from one directory to 
+another.</p>
+
+<ul>
+<li>start from the code of our local copy of our repository (I am mftdevB)</li>
+<pre>cd /alice/sw/O2-dev</pre>
+<li>create a branch to play with, using selected commits from mftdevC</li>
+<pre>git branch O2-mftdevC-tmp</pre>
+<pre>git checkout O2-mftdevC-tmp</pre>
+<li>add the remote repository of the user mftdevC; remember that he is working on the "mft" branch</li>
+<pre>git remote add o2mftdevC --track mft https://github.com/mftdevC/AliceO2</pre>
+<li>get his code on your local machine and see which branches he is using</li>
+<pre>git fetch o2mftdevC</pre>
+<pre>git branch -r</pre>
+<li> here you will see something like</li>
+<pre>  o2mftdevC/mft</pre>
+<li>see the log entries of his work on his working branch</li>
+<pre>git log o2mftdevC/mft</pre>
+<li>and from the list of commits choose the one you want to apply</li>
+<pre>git cherry-pick &lt;commit-id&gt;</pre>
+<li>if no conflicts exist, you can test your code with his commit on top of it</li>
+</ul>
 
 
 
